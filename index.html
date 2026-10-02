@@ -1,0 +1,501 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tool Invasiva">
+<meta name="theme-color" content="#FAF9F7">
+<script data-iphone="sentinella">
+(function(){
+var h=document.documentElement, msg="";
+function ha(c){ return (" "+h.className+" ").indexOf(" "+c+" ")>=0; }
+// L'errore puo' arrivare prima che l'avviso esista — uno script in <head> che
+// non si lascia leggere —: il messaggio si tiene da parte e si scrive quando
+// la pagina c'e'.
+function scrivi(){
+  var e=document.getElementById("nmerr");
+  if(e&&msg) e.textContent="Errore del motore: "+msg;
+}
+function ko(m){
+  if(m&&!msg) msg=m;
+  if(!ha("motore-ko")) h.className+=" motore-ko";
+  scrivi();
+}
+h.className+=" js";
+window.onerror=function(m,src,riga,col){
+  m=String(m);
+  if(/^Script error\.?$/.test(m)) m="il browser non ne mostra il dettaglio (\u00abScript error.\u00bb)";
+  ko(m+(riga?" (riga "+riga+(col?", colonna "+col:"")+")":""));
+};
+document.addEventListener("DOMContentLoaded",function(){
+  if(!ha("motore-ok")) ko(msg||"il motore non ha completato l'avvio"); else scrivi();
+});
+})();
+</script>
+<title>NSTE-ACS — quando la coronarografia</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --bg:#FAF9F7; --surface:#FFFFFF; --surface-alt:#F3F2EF;
+    --border:rgba(11,11,11,0.10); --border-strong:rgba(11,11,11,0.18);
+    --text-primary:#0B0B0B; --text-secondary:#52514E; --text-muted:#76746F;
+    --accent-blue:#2A78D6;   --accent-blue-bg:#E6F1FB;   --accent-blue-border:#B5D4F4;
+    --accent-amber:#BA7517;  --accent-amber-bg:#FAEEDA;  --accent-amber-border:#FAC775;
+    --accent-red:#A32D2D;    --accent-red-bg:#FCEBEB;    --accent-red-border:#F7C1C1;
+    --accent-green:#3B6D11;  --accent-green-bg:#EAF3DE;  --accent-green-border:#C0DD97;
+    --cor-1:#3B8E5A; --cor-2a:#E0A82E; --cor-2b:#DE7E3C; --cor-3:#B33A3A;
+    --k0:#2E7D4F; --k0-bg:#E2F3E8; --k0-bd:#A6D9B8;
+    --k1:#2A78D6; --k1-bg:#E3EFFB; --k1-bd:#A9CBF1;
+    --k2:#8A6A00; --k2-bg:#FBF3C8; --k2-bd:#EBD56C;
+    --k3:#B45309; --k3-bg:#FDEBD8; --k3-bd:#F4BD85;
+    --k4:#A32D2D; --k4-bg:#FCE3E3; --k4-bd:#F0A9A9;
+    --grid:rgba(42,120,214,.08);
+    --font:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --display:'IBM Plex Sans Condensed','Arial Narrow',-apple-system,'Segoe UI',sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,Consolas,'Courier New',monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#111418; --surface:#181C22; --surface-alt:#20252D;
+      --border:rgba(255,255,255,.10); --border-strong:rgba(255,255,255,.19);
+      --text-primary:#E7EAEE; --text-secondary:#B8BEC7; --text-muted:#949BA5;
+      --accent-blue:#72AAEE;   --accent-blue-bg:#18283A;   --accent-blue-border:#2E4B6C;
+      --accent-amber:#E3A94F;  --accent-amber-bg:#30250F;  --accent-amber-border:#5D4719;
+      --accent-red:#EF8E8E;    --accent-red-bg:#361B1B;    --accent-red-border:#6B3232;
+      --accent-green:#95C873;  --accent-green-bg:#1C2A13;  --accent-green-border:#3C5626;
+      --k0:#8FD3A8; --k0-bg:#132B1D; --k0-bd:#2D5A3E;
+      --k1:#8EC0F5; --k1-bg:#16283C; --k1-bd:#2F5378;
+      --k2:#EDD36A; --k2-bg:#2C260C; --k2-bd:#5E5120;
+      --k3:#F3B27A; --k3-bg:#33210F; --k3-bd:#6B4524;
+      --k4:#F29A9A; --k4-bg:#361B1B; --k4-bd:#6B3232;
+      --grid:rgba(114,170,238,.07);
+      color-scheme:dark;
+    }
+  }
+  body { font-family:var(--font); background:var(--bg); color:var(--text-primary); font-size:14.5px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  .page { max-width:960px; margin:0 auto; padding:0 16px 4rem; }
+  strong, b { font-weight:600; }
+  .muted { color:var(--text-muted); }
+  .hero { margin:0 -16px 0; padding:2.2rem 16px 1.3rem; border-bottom:1px solid var(--border);
+          background-color:var(--bg);
+          background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+          background-size:22px 22px; }
+  .kicker { font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-blue); margin-bottom:8px; }
+  .headline { font-family:var(--display); font-size:30px; font-weight:700; line-height:1.12; margin-bottom:10px; }
+  .lede { font-size:14.5px; color:var(--text-secondary); max-width:760px; margin-bottom:12px; }
+  .lede strong { color:var(--text-primary); }
+  .meta-row { display:flex; flex-wrap:wrap; gap:6px 8px; font-size:12px; }
+  .meta-chip { background:var(--surface); border:1px solid var(--border-strong); border-radius:99px; padding:2px 10px; color:var(--text-secondary); overflow-wrap:anywhere; }
+  .meta-chip strong { color:var(--text-primary); }
+  .bar { position:-webkit-sticky; position:-webkit-sticky;position:sticky; top:0; z-index:30; background:var(--bg); border-bottom:1px solid var(--border-strong);
+         margin:0 -16px 1.2rem; padding:8px 16px; display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; }
+  .bar .lbl { font-family:var(--mono); font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); }
+  .bar .sp { flex:1 1 auto; }
+  .btn { font:600 12.5px var(--font); padding:6px 13px; border-radius:99px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text-secondary); cursor:pointer; }
+  .btn:hover { border-color:var(--accent-blue); color:var(--accent-blue); }
+  .stage { display:flex; align-items:baseline; gap:10px; margin:2rem 0 .7rem; padding-bottom:6px; border-bottom:2px solid var(--border-strong); }
+  .stage-n { font-family:var(--mono); font-size:12px; font-weight:600; color:#FFFFFF; background:var(--accent-blue); border-radius:6px; padding:1px 7px; }
+  .stage-t { font-family:var(--display); font-size:20px; font-weight:700; line-height:1.2; }
+  .stage-w { margin-left:auto; font-size:11.5px; color:var(--text-muted); text-align:right; }
+  .card { background:var(--surface); border:1px solid var(--border-strong); border-radius:12px; padding:14px 16px; margin-bottom:12px; }
+  .card h3 { font-size:13px; font-weight:600; letter-spacing:.02em; margin-bottom:8px; color:var(--text-secondary); }
+  .card h3 .sub { float:right; font-family:var(--mono); font-size:12px; color:var(--text-primary); }
+  .row { display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-bottom:10px; }
+  .row:last-child { margin-bottom:0; }
+  .fl { font-size:12.5px; font-weight:600; color:var(--text-secondary); min-width:150px; }
+  .fl small { display:block; font-weight:400; color:var(--text-muted); font-size:11.5px; }
+  input[type=number] { font:500 15px var(--font); color:var(--text-primary); background:var(--surface); border:1px solid var(--border-strong); border-radius:8px; padding:6px 9px; width:92px; text-align:center; }
+  .seg { display:inline-flex; flex-wrap:wrap; border:1px solid var(--border-strong); border-radius:10px; overflow:hidden; }
+  .seg label { position:relative; cursor:pointer; }
+  .seg input { position:absolute; opacity:0; width:1px; height:1px; }
+  .seg span { display:block; padding:6px 12px; font-size:13.5px; font-weight:500; color:var(--text-secondary); border-right:1px solid var(--border); }
+  .seg label:last-child span { border-right:none; }
+  .seg input:checked + span { background:var(--text-primary); color:var(--bg); }
+  .seg input:focus-visible + span { outline:2px solid var(--accent-blue); outline-offset:-2px; }
+  .chk { display:flex; align-items:flex-start; gap:9px; padding:6px 0; font-size:14px; line-height:1.45; border-bottom:1px dashed var(--border); cursor:pointer; }
+  .chk:last-child { border-bottom:none; }
+  .chk input { margin-top:3px; width:17px; height:17px; flex:0 0 auto; accent-color:var(--accent-blue); }
+  .chk small { display:block; color:var(--text-muted); font-size:12px; }
+  .chk .tx { flex:1 1 auto; min-width:0; }
+  .pt { flex:0 0 auto; margin-left:auto; font-family:var(--mono); font-size:12.5px; font-weight:600; color:var(--text-secondary); white-space:nowrap; }
+  .pt.neg { color:var(--k0); }
+  .riga { display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; padding:6px 0; border-bottom:1px dashed var(--border); }
+  .riga .fl { min-width:0; flex:1 1 180px; }
+  .hide { display:none !important; }
+  .esito { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; margin-bottom:4px; }
+  .cat { display:inline-block; font-size:12.5px; font-weight:600; border-radius:99px; padding:2px 10px; border:1px solid; }
+  .k0 { color:var(--k0); background:var(--k0-bg); border-color:var(--k0-bd); }
+  .k1 { color:var(--k1); background:var(--k1-bg); border-color:var(--k1-bd); }
+  .k2 { color:var(--k2); background:var(--k2-bg); border-color:var(--k2-bd); }
+  .k3 { color:var(--k3); background:var(--k3-bg); border-color:var(--k3-bd); }
+  .k4 { color:var(--k4); background:var(--k4-bg); border-color:var(--k4-bd); }
+  .kx { color:var(--text-muted); background:var(--surface-alt); border-color:var(--border-strong); }
+  .big { font-family:var(--display); font-size:26px; font-weight:700; line-height:1.15; }
+  .cor { display:inline-block; font-family:var(--mono); font-size:11px; font-weight:600; color:#FFFFFF; border-radius:4px; padding:0 5px; margin:0 1px; white-space:nowrap; vertical-align:1px; }
+  .c1 { background:var(--cor-1); } .c2a { background:var(--cor-2a); color:#1D1602; } .c2b { background:var(--cor-2b); } .c3 { background:var(--cor-3); }
+  .pg { font-family:var(--mono); font-size:11px; color:var(--text-muted); }
+  .dv { font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.03em; color:var(--accent-red); background:var(--accent-red-bg); border:1px solid var(--accent-red-border); border-radius:4px; padding:0 5px; white-space:nowrap; }
+  .nota { border-left:3px solid var(--accent-amber); background:var(--accent-amber-bg); border-radius:0 8px 8px 0; padding:7px 11px; margin-top:8px; font-size:13.5px; }
+  .nota.info { border-left-color:var(--accent-blue); background:var(--accent-blue-bg); }
+  .nota.stop { border-left-color:var(--accent-red); background:var(--accent-red-bg); }
+  .nota.ok { border-left-color:var(--accent-green); background:var(--accent-green-bg); }
+  .nota.spenta { border-left-color:var(--border-strong); background:var(--surface-alt); color:var(--text-secondary); }
+  .nota strong { color:var(--text-primary); }
+  .passo { display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); }
+  .passo:last-child { border-bottom:none; }
+  .passo .ico { flex:0 0 26px; font-weight:700; text-align:center; font-family:var(--mono); font-size:13px; padding-top:1px; }
+  .passo .tx { flex:1 1 auto; font-size:14px; min-width:0; overflow-wrap:anywhere; }
+  .passo.att { background:var(--accent-blue-bg); border-radius:8px; border-bottom-color:transparent; padding:8px 8px; margin:2px -8px; }
+  .passo.att .ico { color:var(--accent-blue); }
+  .passo.esc .ico { color:var(--text-muted); }
+  .passo.esc .tx { color:var(--text-muted); }
+  .lista li { margin:4px 0 4px 18px; font-size:13.5px; }
+  .tab { width:100%; border-collapse:collapse; font-size:13px; margin-top:4px; }
+  .tab th, .tab td { text-align:left; padding:5px 6px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .tab th { font-size:11.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em; }
+  .tab td.n { font-family:var(--mono); white-space:nowrap; }
+  .ck { display:flex; gap:8px; font-size:13.5px; padding:3px 0; }
+  .ck .s { flex:0 0 18px; font-weight:700; text-align:center; }
+  .ck .s.si { color:var(--k4); } .ck .s.no { color:var(--k1); }
+  .foot { margin-top:2.4rem; padding-top:1rem; border-top:1px solid var(--border-strong); font-size:12px; color:var(--text-muted); line-height:1.7; }
+  .foot strong { color:var(--text-secondary); }
+  @media (max-width:640px) {
+    .headline { font-size:25px; }
+    .stage-w { display:none; }
+    .fl { min-width:0; width:100%; }
+    .big { font-size:22px; }
+    .tab { font-size:12px; }
+  }
+  .chk.on .tx { color:var(--text-primary); }
+  .chk.on .tx > b, .chk.on .tx { font-weight:500; }
+  @media print { .bar { position:static; } }
+  .vv { font-family:var(--mono); font-size:12px; color:var(--text-muted); }
+  select { font:500 13.5px var(--font); color:var(--text-primary); background:var(--surface); border:1px solid var(--border-strong); border-radius:8px; padding:6px 8px; max-width:100%; }
+  .wk { display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; padding:6px 0; border-bottom:1px dashed var(--border); }
+  .wk .fl { min-width:0; flex:0 0 150px; }
+  .wk select { flex:1 1 220px; min-width:0; }
+  @media (max-width:640px) { .wk .fl { flex:1 1 100%; } }
+
+</style>
+<style data-iphone="stile">
+/* L'avviso e' visibile per costruzione: lo nasconde solo la classe che la
+   sentinella mette quando JavaScript esiste, e lo rimostra quando il motore
+   muore. Nell'anteprima dell'iPhone nessuna delle due arriva. */
+#nomotore{background:#FCEBEB;border:1.5px solid #A32D2D;border-radius:10px;
+ padding:12px 15px;margin:0 0 1.1rem;font-size:13.5px;line-height:1.6;color:#0B0B0B;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+#nomotore strong{display:block;color:#A32D2D;font-size:15px;margin-bottom:4px}
+#nomotore p{margin:6px 0 0}
+#nomotore a{color:#A32D2D}
+#nomotore .nmurl{font-family:'SFMono-Regular',Consolas,Menlo,monospace;font-size:.92em;word-break:break-all}
+#nomotore .nmerr{display:block;font-family:'SFMono-Regular',Consolas,Menlo,monospace;
+ font-size:11.5px;color:#A32D2D;margin-top:6px;word-break:break-word}
+#nomotore .nmerr:empty{display:none}
+html.js #nomotore{display:none}
+html.js.motore-ko #nomotore{display:block}
+
+#nmprivacy{background:#E2F4F5;border:1px solid #A7DBDE;border-radius:8px;padding:9px 13px;
+ margin:0 0 1rem;font-size:12.5px;line-height:1.55;color:#0B0B0B;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+@media print{#nmprivacy{display:none}}
+</style>
+</head>
+<body>
+<div class="nomotore" id="nomotore" role="alert">
+ <strong>Motore di calcolo non attivo</strong>
+ <p>I calcoli, i filtri e i comandi di questa pagina <b>non funzionano</b>: dove leggi «—» non c'è un
+ valore. Il testo resta leggibile, i numeri che dipendono dai tuoi dati no. Non usare questa pagina
+ per decidere una dose.</p>
+ <p>Su iPhone e iPad succede sempre con un file salvato sul telefono: si apre nell'<b>anteprima</b> —
+ dall'app File, da Mail, da WhatsApp —, che mostra la pagina ma non esegue il motore, e Apple non
+ permette di aprirlo in Safari. Sull'iPhone il tool funziona aperto da questo indirizzo, in Safari: <a class="nmurl" href="https://francescofugetto-ai.github.io/tool-invasiva-web/">https://francescofugetto-ai.github.io/tool-invasiva-web/</a> — poi Condividi, «Aggiungi alla schermata Home». Dopo la prima apertura funziona anche senza rete. Su computer e Android basta aprire il file.</p>
+ <span class="nmerr" id="nmerr"></span>
+</div>
+<div class="nmprivacy" id="nmprivacy">
+ <b>Quello che scrivi resta su questo dispositivo.</b> La pagina non invia niente in rete e non
+ salva niente: nessun dato esce da qui. Per la stessa ragione, <b>chiudendola il contenuto si
+ perde</b> — copia il referto dove ti serve prima di chiudere.
+</div>
+<div class="page">
+<header class="hero">
+  <div class="kicker">Strumento · Sindrome coronarica acuta · ESC 2023</div>
+  <h1 class="headline">NSTE-ACS — quando la coronarografia</h1>
+  <p class="lede"><strong>Come si usa.</strong> Lo strumento percorre la <strong>Fig. 8</strong> e la Recommendation Table 4 della linea guida: dopo la diagnosi di lavoro di <strong>NSTE-ACS</strong>, i criteri di <strong>altissimo rischio</strong> decidono la strategia invasiva <strong>immediata</strong>, quelli di <strong>alto rischio</strong> la <strong>precoce, entro 24 h</strong>, e senza nessuno dei due il <strong>sospetto clinico di angina instabile</strong> sceglie fra la coronarografia durante il ricovero e la strategia <strong>selettiva</strong>. Ogni gruppo di criteri va <strong>confermato come valutato</strong>: una casella vuota non vale «assente» finché non lo dici. <strong>Non calcola il GRACE</strong> e <strong>non dà dosi</strong>. <strong>Azzera</strong>, in alto, ricomincia.</p>
+  <div class="meta-row">
+    <span class="meta-chip"><strong>Fonte</strong> 2023 ESC Guidelines for the management of acute coronary syndromes</span>
+    <span class="meta-chip"><strong>Calcolo</strong> Fig. 8, p. 3748 · Rec. Table 4, p. 3750 · Tab. 3, p. 3731 · § 5.2, pp. 3747–3749</span>
+  </div>
+</header>
+
+<div class="bar" id="bar" aria-live="polite">
+  <span class="lbl">Strategia</span> <span id="barEsito" class="cat kx">—</span>
+  <span class="lbl">Classe</span> <span id="barClasse" class="cat kx">—</span>
+  <span class="lbl">Quando</span> <span id="barTempo" class="cat kx">—</span>
+  <span class="sp"></span>
+  <button class="btn" id="azzera" type="button">Azzera</button>
+</div>
+
+<div class="stage"><span class="stage-n">1</span><span class="stage-t">La diagnosi di lavoro</span><span class="stage-w">Fig. 8, p. 3748 · Rec. Table 1, p. 3739</span></div>
+<div class="card">
+  <div class="riga"><span class="fl">ECG<small>sintomi di SCA in corso o recenti</small></span>
+    <span class="seg">
+      <label><input type="radio" name="ecg" value="nste"><span>senza sopraslivellamento persistente né equivalenti</span></label>
+      <label><input type="radio" name="ecg" value="stemi"><span>sopraslivellamento persistente o equivalente</span></label>
+    </span></div>
+  <div class="riga"><span class="fl">Primo contatto</span>
+    <span class="seg">
+      <label><input type="radio" name="fmc" value="pci"><span>centro con PCI</span></label>
+      <label><input type="radio" name="fmc" value="nopci"><span>centro senza PCI</span></label>
+      <label><input type="radio" name="fmc" value="amb"><span>ambulanza</span></label>
+    </span></div>
+</div>
+
+<div class="stage"><span class="stage-n">2</span><span class="stage-t">Altissimo rischio</span><span class="stage-w">Rec. Table 4, p. 3750 · Fig. 8</span></div>
+<div class="card">
+  <label class="chk"><input type="checkbox" id="v_shock"><span class="tx">Instabilità emodinamica o shock cardiogeno</span></label>
+  <label class="chk"><input type="checkbox" id="v_dolore"><span class="tx">Dolore ricorrente o refrattario nonostante la terapia medica</span></label>
+  <label class="chk"><input type="checkbox" id="v_aritmie"><span class="tx">Aritmie minacciose in ospedale<small>la Fig. 8 scrive «o arresto cardiaco dopo l'arrivo»</small></span></label>
+  <label class="chk"><input type="checkbox" id="v_mecc"><span class="tx">Complicanze meccaniche dell'infarto</span></label>
+  <label class="chk"><input type="checkbox" id="v_hf"><span class="tx">Scompenso acuto da ischemia in corso</span></label>
+  <label class="chk"><input type="checkbox" id="v_ecg"><span class="tx">Alterazioni ST o T dinamiche ricorrenti, soprattutto sopraslivellamento intermittente</span></label>
+  <label class="chk" style="margin-top:6px;border-top:1px solid var(--border-strong);padding-top:9px"><input type="checkbox" id="v_valutati"><span class="tx"><b>Ho valutato i sei criteri di altissimo rischio</b><small>quelli non segnati sono assenti, non sconosciuti</small></span></label>
+</div>
+
+<div class="stage"><span class="stage-n">3</span><span class="stage-t">Alto rischio</span><span class="stage-w">Rec. Table 4, p. 3750 · Fig. 8</span></div>
+<div class="card">
+  <label class="chk"><input type="checkbox" id="h_nstemi"><span class="tx">NSTEMI confermato con gli algoritmi ESC della troponina hs<small>il percorso dei prelievi è nel tool della troponina</small></span></label>
+  <label class="chk"><input type="checkbox" id="h_stt"><span class="tx">Alterazioni dinamiche del tratto ST o dell'onda T</span></label>
+  <label class="chk"><input type="checkbox" id="h_transit"><span class="tx">Sopraslivellamento ST transitorio</span></label>
+  <div class="riga" style="margin-top:6px"><span class="fl">Punteggio GRACE<small>se calcolato altrove; conta sopra 140</small></span><input type="number" id="grace" min="1" max="400" step="1" inputmode="numeric" placeholder="—"><span class="vv" id="vGrace">—</span></div>
+  <label class="chk" style="margin-top:6px;border-top:1px solid var(--border-strong);padding-top:9px"><input type="checkbox" id="h_valutati"><span class="tx"><b>Ho valutato i criteri di alto rischio</b><small>quelli non segnati sono assenti; il GRACE conta solo se lo scrivi</small></span></label>
+</div>
+
+<div class="stage" id="stage4"><span class="stage-n">4</span><span class="stage-t">Senza criteri: il sospetto di angina instabile</span><span class="stage-w">§ 5.2.3, pp. 3748–3749 · Rec. Table 4</span></div>
+<div class="card" id="card4">
+  <div class="riga"><span class="fl">Sospetto clinico di angina instabile</span>
+    <span class="seg">
+      <label><input type="radio" name="ua" value="alto"><span>alto</span></label>
+      <label><input type="radio" name="ua" value="basso"><span>basso</span></label>
+    </span></div>
+</div>
+
+<div class="stage"><span class="stage-n">5</span><span class="stage-t">La strategia</span><span class="stage-w">Fig. 8 · Rec. Table 4 · Tab. 3</span></div>
+<div class="card" id="outStrategia"></div>
+
+<div class="card"><h3>Incoerenze e ambiguità della fonte</h3><div id="outInc"></div></div>
+<div class="card"><h3>Limiti per questo paziente</h3><ul class="lista" id="limiti"></ul></div>
+
+<div class="foot">
+  <strong>Fonte.</strong> Byrne RA, Rossello X, Coughlan JJ, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. <em>Eur Heart J</em> 2023;44:3720–3826, doi:10.1093/eurheartj/ehad191 — definizioni dei tempi (Tab. 3, p. 3731), strategia invasiva nella NSTE-ACS (§ 5.2, pp. 3747–3749; Fig. 8, p. 3748), raccomandazioni (Rec. Table 4, p. 3750; Rec. Table 1, p. 3739; Rec. Table 5, p. 3758; Rec. Table 10, p. 3766), imaging nel sospetto di SCA (Rec. Table 2, p. 3742). Ogni numero mostrato porta la pagina.<br><br>
+  Strumento personale di studio e consultazione: <strong>non sostituisce il giudizio clinico</strong>. Non calcola il GRACE e non calcola dosi. Non salva i dati e non li invia in rete.
+</div>
+</div>
+<script>
+(function () {
+  "use strict";
+
+  /* ═══ DATI ═══════════════════════════════════════════════════════════════
+     2023 ESC Guidelines for the management of acute coronary syndromes.
+     Rec. Table 4, p. 3750 — NSTE-ACS:
+       immediata con almeno un criterio di altissimo rischio (instabilita'
+       emodinamica o shock; dolore ricorrente o refrattario; aritmie minacciose
+       in ospedale; complicanze meccaniche; scompenso acuto da ischemia in
+       corso; alterazioni ST/T dinamiche ricorrenti, soprattutto ST intermittente) I C;
+       precoce entro 24 h con almeno un criterio di alto rischio (NSTEMI
+       confermato con gli algoritmi ESC; ST/T dinamiche; ST transitorio;
+       GRACE >140) IIa A;
+       durante il ricovero con criteri di alto rischio o sospetto alto di
+       angina instabile I A;
+       selettiva senza criteri e con sospetto basso I A.
+     Fig. 8, p. 3748 — trasferimento: immediato (altissimo), precoce o durante
+       il ricovero (alto), durante il ricovero se serve (non alto).
+     Tab. 3, p. 3731 — immediata: «emergency (i.e. as soon as possible)»;
+       precoce: «<24 h from diagnosis of ACS»; selettiva: «based on clinical
+       assessment and/or non-invasive testing».
+     Rec. Table 5, p. 3758 — pretrattamento con P2Y12: non di routine se
+       anatomia non nota e invasiva precoce (<24 h) programmata III A; si puo'
+       considerare se non e' prevista entro 24 h e senza HBR IIb C; GP IIb/IIIa
+       mai in pretrattamento III A.
+     Rec. Table 10, p. 3766 — ECG ≥24 h e UTIC ≥24 h nell'altissimo rischio I C.
+     Rec. Table 2, p. 3742 — troponina non elevata o incerta, ECG senza
+       alterazioni, dolore non ricorrente: CCTA o imaging da stress IIa A;
+       CCTA precoce di routine nel sospetto di SCA III B.
+     Rec. Table 1, p. 3739 — GRACE per la prognosi IIa B (il testo, p. 3765,
+       dice «recommended»). */
+  var SOGLIA_GRACE = 140;   // «GRACE risk score >140», p. 3750
+  var ALTISSIMO = [
+    ["v_shock", "instabilità emodinamica o shock"],
+    ["v_dolore", "dolore ricorrente o refrattario"],
+    ["v_aritmie", "aritmie minacciose in ospedale"],
+    ["v_mecc", "complicanze meccaniche"],
+    ["v_hf", "scompenso acuto da ischemia in corso"],
+    ["v_ecg", "ST/T dinamiche ricorrenti"]
+  ];
+  var ALTO = [
+    ["h_nstemi", "NSTEMI confermato (algoritmi ESC)"],
+    ["h_stt", "ST/T dinamiche"],
+    ["h_transit", "sopraslivellamento ST transitorio"]
+  ];
+
+  /* ═══ FUNZIONI PURE ═══════════════════════════════════════════════════ */
+  function graceOk(g) { return g !== null && g >= 1 && g <= 400; }
+  function criteri(s, lista) { var l = [], i; for (i = 0; i < lista.length; i++) if (s[lista[i][0]]) l.push(lista[i][1]); return l; }
+  function alti(s) {
+    var l = criteri(s, ALTO);
+    if (graceOk(s.grace) && s.grace > SOGLIA_GRACE) l.push("GRACE " + s.grace + " (>140)");
+    return l;
+  }
+  function strategia(s) {
+    var p = [];
+    if (!s.ecg) return { esito:null, perche:"serve l'ECG (passo 1)" };
+    if (s.ecg === "stemi") return { esito:"stemi", c:"I", l:"A", p:["sopraslivellamento persistente o equivalente"] };
+    p.push("NSTE-ACS");
+    var v = criteri(s, ALTISSIMO);
+    if (v.length) { p.push("altissimo rischio: " + v.join("; ")); return { esito:"immediata", c:"I", l:"C", p:p, criteri:v }; }
+    if (!s.v_valutati) return { esito:null, p:p, perche:"conferma di aver valutato i criteri di altissimo rischio (passo 2)" };
+    p.push("nessun criterio di altissimo rischio");
+    var h = alti(s);
+    if (h.length) { p.push("alto rischio: " + h.join("; ")); return { esito:"precoce", c:"IIa", l:"A", p:p, criteri:h }; }
+    if (!s.h_valutati) return { esito:null, p:p, perche:"conferma di aver valutato i criteri di alto rischio (passo 3)" };
+    p.push("nessun criterio di alto rischio");
+    if (!s.ua) return { esito:null, p:p, perche:"serve il sospetto clinico di angina instabile (passo 4)" };
+    if (s.ua === "alto") { p.push("sospetto alto di angina instabile"); return { esito:"ricovero", c:"I", l:"A", p:p }; }
+    p.push("sospetto basso");
+    return { esito:"selettiva", c:"I", l:"A", p:p };
+  }
+  function trasferimento(esito, fmc) {
+    // Fig. 8, p. 3748
+    if (!fmc || esito === "stemi") return null;
+    if (fmc === "pci") return "Il paziente è già in un centro con PCI.";
+    if (esito === "immediata") return "Trasferimento <b>immediato</b> al centro con PCI.";
+    if (esito === "precoce") return "Trasferimento <b>precoce</b> o durante il ricovero al centro con PCI.";
+    if (esito === "ricovero") return "Trasferimento durante il ricovero al centro con PCI.";
+    return "Trasferimento durante il ricovero <b>se serve</b>, cioè se i test lo indicano.";
+  }
+
+  /* ═══ STATO E DISEGNO ═════════════════════════════════════════════════ */
+  function el(id) { return document.getElementById(id); }
+  function ckv(id) { var e = el(id); return !!(e && e.checked); }
+  function num(id) { var v = el(id).value; if (v === "") return null; var n = parseFloat(String(v).replace(",", ".")); return isNaN(n) ? null : n; }
+  function radio(n) { var e = document.querySelector('input[name="' + n + '"]:checked'); return e ? e.value : ""; }
+  function pgs(p) { return ' <span class="pg">' + p + "</span>"; }
+  function corPill(c, l) { var k = { "I":"c1", "IIa":"c2a", "IIb":"c2b", "III":"c3" }[c]; return '<span class="cor ' + k + '">' + c + "</span>" + (l ? ' <span class="cor ' + k + '" style="opacity:.85">' + l + "</span>" : ""); }
+  function nota(g, t) { return '<div class="nota ' + (g || "") + '">' + t + "</div>"; }
+  function chip(k, t) { return '<span class="cat ' + k + '">' + t + "</span>"; }
+  var R4 = "ESC 2023, Rec. Table 4, p. 3750", F8 = "ESC 2023, Fig. 8, p. 3748", T3 = "ESC 2023, Tab. 3, p. 3731", R5 = "ESC 2023, Rec. Table 5, p. 3758", R10 = "ESC 2023, Rec. Table 10, p. 3766", R2 = "ESC 2023, Rec. Table 2, p. 3742", R1 = "ESC 2023, Rec. Table 1, p. 3739";
+
+  function S() {
+    var s = { ecg:radio("ecg"), fmc:radio("fmc"), ua:radio("ua"), grace:num("grace"), v_valutati:ckv("v_valutati"), h_valutati:ckv("h_valutati") }, i;
+    for (i = 0; i < ALTISSIMO.length; i++) s[ALTISSIMO[i][0]] = ckv(ALTISSIMO[i][0]);
+    for (i = 0; i < ALTO.length; i++) s[ALTO[i][0]] = ckv(ALTO[i][0]);
+    return s;
+  }
+
+  var ESITI = {
+    immediata:["k4", "invasiva immediata", "il prima possibile"],
+    precoce:["k3", "invasiva precoce", "entro 24 h dalla diagnosi"],
+    ricovero:["k1", "invasiva durante il ricovero", "durante il ricovero"],
+    selettiva:["k0", "invasiva selettiva", "secondo clinica e test"],
+    stemi:["k4", "percorso dello STEMI", "subito"]
+  };
+
+  function disegna() {
+    var s = S(), r = strategia(s), i;
+    var chk = document.querySelectorAll(".chk");
+    for (i = 0; i < chk.length; i++) {
+      var inp = chk[i].querySelector("input"), on = !!(inp && inp.checked);
+      if (on && (" " + chk[i].className + " ").indexOf(" on ") < 0) chk[i].className += " on";
+      if (!on) chk[i].className = chk[i].className.replace(/(^|\s)on(\s|$)/g, " ").replace(/\s+$/, "");
+    }
+    var vg = "—";
+    if (s.grace !== null) vg = graceOk(s.grace) ? (s.grace > SOGLIA_GRACE ? "oltre 140: criterio" : "140 o meno: non è criterio") : "fuori scala: ignorato";
+    el("vGrace").innerHTML = vg;
+    var mostra4 = r.esito === "ricovero" || r.esito === "selettiva" || (r.esito === null && s.v_valutati && s.h_valutati && !criteri(s, ALTISSIMO).length && !alti(s).length);
+    el("stage4").className = mostra4 ? "stage" : "stage hide";
+    el("card4").className = mostra4 ? "card" : "card hide";
+
+    var h = "<h3>La strategia — Fig. 8, p. 3748</h3>";
+    if (r.esito === null) h += '<div class="esito">' + chip("kx", "—") + '<span class="muted">' + r.perche + "</span></div>";
+    else {
+      var E = ESITI[r.esito];
+      h += '<div class="esito"><span class="big">' + E[1].charAt(0).toUpperCase() + E[1].slice(1) + "</span>" + corPill(r.c, r.l) + "</div>";
+    }
+    if (r.p && r.p.length) h += '<div style="font-size:13.5px;margin:4px 0 6px"><b>Percorso:</b> ' + r.p.join(" → ") + "</div>";
+    var t = trasferimento(r.esito, s.fmc);
+    if (r.esito === "stemi") {
+      h += nota("stop", "Con un sopraslivellamento persistente o un equivalente la diagnosi di lavoro è lo <b>STEMI</b>: triage immediato per la riperfusione d'emergenza " + corPill("I", "A") + pgs(R1) + ". Questo strumento non vale: la riperfusione è nel tool dello STEMI.");
+    }
+    if (r.esito === "immediata") {
+      h += nota("stop", "Strategia invasiva <b>immediata</b> con almeno un criterio di altissimo rischio " + corPill("I", "C") + pgs(R4) + ": coronarografia d'emergenza, il prima possibile, e PCI o bypass se indicati" + pgs(T3) + ".");
+      h += '<div class="passo att"><span class="ico">→</span><span class="tx">ECG monitorato per almeno 24 h e UTIC per almeno 24 h ' + corPill("I", "C") + pgs(R10) + ".</span></div>";
+    }
+    if (r.esito === "precoce") {
+      h += nota("", "Strategia invasiva <b>precoce, entro 24 h</b>, con almeno un criterio di alto rischio " + corPill("IIa", "A") + pgs(R4) + "; in ogni caso coronarografia <b>durante il ricovero</b> " + corPill("I", "A") + pgs(R4) + ". «Precoce» vuol dire entro 24 h dalla diagnosi di SCA" + pgs(T3) + ".");
+    }
+    if (r.esito === "ricovero") h += nota("info", "Strategia invasiva <b>durante il ricovero</b> per il sospetto alto di angina instabile " + corPill("I", "A") + pgs(R4) + ".");
+    if (r.esito === "selettiva") {
+      h += nota("ok", "Strategia invasiva <b>selettiva</b>: coronarografia secondo la clinica e i test non invasivi " + corPill("I", "A") + pgs(R4 + "; " + T3) + ".");
+      h += '<div class="passo att"><span class="ico">→</span><span class="tx">Con troponina non elevata o incerta, ECG senza alterazioni e dolore che non ritorna: <b>CCTA o imaging da stress</b> nel percorso iniziale ' + corPill("IIa", "A") + pgs(R2) + ". Non una CCTA precoce di routine in ogni sospetto di SCA " + corPill("III", "B") + pgs(R2) + ".</span></div>";
+    }
+    if (t) h += '<div class="passo"><span class="ico">⇢</span><span class="tx">' + t + pgs(F8) + "</span></div>";
+    if (r.esito === "immediata" || r.esito === "precoce") h += '<div class="passo"><span class="ico">·</span><span class="tx">Pretrattamento con P2Y12-inibitore: <b>non di routine</b> con anatomia non nota e coronarografia entro 24 h ' + corPill("III", "A") + "; nessun inibitore GP IIb/IIIa in pretrattamento " + corPill("III", "A") + pgs(R5) + ". Farmaci e dosi: tool degli antitrombotici.</span></div>";
+    if (r.esito === "ricovero" || r.esito === "selettiva") h += '<div class="passo"><span class="ico">·</span><span class="tx">Se la coronarografia non è prevista entro 24 h e il rischio emorragico non è alto, il pretrattamento con P2Y12-inibitore <b>si può considerare</b> ' + corPill("IIb", "C") + pgs(R5) + ".</span></div>";
+    el("outStrategia").innerHTML = h;
+
+    function inc(tocca, x) { return nota(tocca ? "" : "spenta", (tocca ? "<b>Tocca questo caso.</b> " : "") + x); }
+    el("outInc").innerHTML =
+      inc(r.esito === "precoce", "<b>Da quando si contano le 24 h.</b> La Tab. 3 e la Recommendation Table le contano dalla <b>diagnosi</b> di SCA" + pgs(T3) + "; la nota della Fig. 10, a proposito del fondaparinux, dall'<b>esordio dei sintomi</b>" + pgs("ESC 2023, Fig. 10, p. 3755") + ". Lo strumento usa la diagnosi, come la definizione.") +
+      inc(s.v_aritmie || s.v_ecg, "<b>Due criteri scritti in due modi.</b> La tabella dice «aritmie minacciose in ospedale» e «alterazioni ST o T dinamiche ricorrenti»" + pgs(R4) + "; la Fig. 8 «aritmie minacciose o arresto cardiaco dopo l'arrivo» e «alterazioni ECG dinamiche ricorrenti suggestive di ischemia»" + pgs(F8) + ". L'arresto rianimato ha un percorso suo (§ 7).") +
+      inc(graceOk(s.grace), "<b>Il GRACE.</b> Il testo lo dice «raccomandato»" + pgs("ESC 2023, p. 3765") + ", la tabella lo mette in " + corPill("IIa", "B") + pgs(R1) + ". Come criterio di alto rischio conta sopra 140" + pgs(R4) + ".");
+
+    var lim = [];
+    lim.push("Il <b>GRACE non è calcolato</b>: la linea guida ne elenca le otto variabili ma non i coefficienti, e un punteggio a memoria è un numero inventato. Va scritto se calcolato altrove.");
+    lim.push("La conferma dell'NSTEMI passa dagli algoritmi ESC della troponina hs (0 h/1 h o 0 h/2 h): sono nel tool della troponina" + pgs("ESC 2023, Fig. 6, p. 3741") + ".");
+    lim.push("Arresto cardiaco rianimato e shock hanno percorsi propri (§ 7, Rec. Table 8–9, pp. 3763–3764).");
+    lim.push("Nell'anziano fragile la strategia si individualizza dopo aver pesato rischi e benefici " + corPill("I", "B") + pgs("ESC 2023, Rec. Table 15, p. 3781") + ". Dopo la linea guida, SENIOR-RITA (2024, PMID 39225274) non ha mostrato vantaggio della strategia invasiva di routine sugli esiti duri nell'NSTEMI dai 75 anni: integrazione, nessuna classe cambia.");
+    lim.push("Nessuna dose: antiaggreganti e anticoagulanti sono nel tool degli antitrombotici.");
+    el("limiti").innerHTML = "<li>" + lim.join("</li><li>") + "</li>";
+
+    function bar(id, k, x) { var b = el(id); b.className = "cat " + k; b.innerHTML = x; }
+    bar("barEsito", r.esito ? ESITI[r.esito][0] : "kx", r.esito ? ESITI[r.esito][1] : "—");
+    bar("barClasse", "kx", r.c ? r.c + " " + r.l : "—");
+    bar("barTempo", "kx", r.esito ? ESITI[r.esito][2] : "—");
+  }
+
+  document.addEventListener("input", disegna);
+  document.addEventListener("change", disegna);
+  el("azzera").addEventListener("click", function () {
+    var ins = document.querySelectorAll("input"), i;
+    for (i = 0; i < ins.length; i++) {
+      if (ins[i].type === "checkbox" || ins[i].type === "radio") ins[i].checked = false;
+      else ins[i].value = "";
+    }
+    disegna();
+    window.scrollTo(0, 0);
+  });
+
+  window.INVASIVA_MOTORE = { strategia:strategia, alti:alti, trasferimento:trasferimento, SOGLIA_GRACE:SOGLIA_GRACE };
+  disegna();
+})();
+</script>
+<script data-iphone="web">
+// Solo da un indirizzo https, cioe' dalla pagina pubblicata: aperto come file
+// il tool non cerca ne' manifest ne' service worker, che accanto al file non
+// ci sono. Un errore qui non deve fermare niente: e' un di piu'.
+(function(){
+if(location.protocol!=="https:") return;
+try{
+  var t=document.getElementsByTagName("head")[0];
+  var m=document.createElement("link"); m.rel="manifest"; m.href="manifest.webmanifest";
+  var i=document.createElement("link"); i.rel="apple-touch-icon"; i.href="icona-180.png";
+  t.appendChild(m); t.appendChild(i);
+  if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js")["catch"](function(){});
+}catch(e){}
+})();
+</script>
+<script data-iphone="fine">document.documentElement.className+=" motore-ok";</script>
+</body>
+</html>
